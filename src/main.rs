@@ -1,3 +1,4 @@
+extern crate raster;
 mod geometrical_shapes;
 
 use geometrical_shapes as gs;
