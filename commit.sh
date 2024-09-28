@@ -1,8 +1,7 @@
 #!/bin/bash
+
 # Get files
-git stash
-git pull
-git stash apply
+bash pull.sh
 
 # Upload files
 git add .
