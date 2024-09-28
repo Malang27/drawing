@@ -33,7 +33,9 @@ impl Point {
 }
 
 impl Drawable for Point {
-    fn draw(&self, image: &mut Image) {}
+    fn draw(&self, image: &mut Image) {
+        
+    }
 }
 
 //--------------------------------------------------------------------------------
