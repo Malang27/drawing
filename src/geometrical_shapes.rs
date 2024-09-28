@@ -146,3 +146,16 @@ impl Displayable for Image {
         }
     }
 }
+
+//--------------------------------------------------------------------------------
+// Image
+//--------------------------------------------------------------------------------
+pub fn random_color() -> Color {
+    let mut rng = rand::thread_rng();
+    Color {
+        r: rng.gen_range(1..=255),
+        g: rng.gen_range(1..=255),
+        b: rng.gen_range(1..=255),
+        a: 255,
+    }
+}
