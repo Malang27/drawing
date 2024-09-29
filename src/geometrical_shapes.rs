@@ -8,7 +8,7 @@ pub trait Drawable {
 }
 
 pub trait Displayable {
-    fn display(&mut self, x: i32, y: i32, color: &Color) {}
+    fn display(&mut self, _x: i32, _y: i32, _color: &Color) {}
 }
 
 //--------------------------------------------------------------------------------
@@ -22,14 +22,14 @@ pub struct Point {
 
 impl Point {
     pub fn new(pos_x: i32, pos_y: i32) -> Point {
-        Point { x: pos_x, y: pos_y }  // Creates a Point with the provided x and y coordinates.
+        Point { x: pos_x, y: pos_y } // Creates a Point with the provided x and y coordinates.
     }
 
     pub fn random(width: i32, height: i32) -> Point {
         let mut rng = rand::thread_rng();
         Point {
-            x: rng.gen_range(0..width),   // Random x coordinate within image width.
-            y: rng.gen_range(0..height),  // Random y coordinate within image height.
+            x: rng.gen_range(0..width),  // Random x coordinate within image width.
+            y: rng.gen_range(0..height), // Random y coordinate within image height.
         }
     }
 }
@@ -60,18 +60,16 @@ impl Rectangle {
 
 impl Drawable for Rectangle {
     fn draw(&self, image: &mut Image) {
-        let top_right = Point::new(self.bottom_right.x, self.top_left.y);  // Top-right corner.
-        let bottom_left = Point::new(self.top_left.x, self.bottom_right.y);  // Bottom-left corner.
+        let top_right = Point::new(self.bottom_right.x, self.top_left.y); // Top-right corner.
+        let bottom_left = Point::new(self.top_left.x, self.bottom_right.y); // Bottom-left corner.
 
         // Draw four sides of the rectangle using Line structs.
-        Line::new(self.top_left.clone(), top_right.clone()).draw(image);     // Top side.
+        Line::new(self.top_left.clone(), top_right.clone()).draw(image); // Top side.
         Line::new(top_right, self.bottom_right.clone()).draw(image); // Right side.
         Line::new(self.bottom_right.clone(), bottom_left.clone()).draw(image); // Bottom side.
-        Line::new(bottom_left, self.top_left.clone()).draw(image);   // Left side.
+        Line::new(bottom_left, self.top_left.clone()).draw(image); // Left side.
     }
 }
-
-
 
 //--------------------------------------------------------------------------------
 // Circle
@@ -81,7 +79,6 @@ pub struct Circle {
     c: Point,
     r: i32,
 }
-
 impl Circle {
     pub fn new(center: &Point, radius: i32) -> Circle {
         Circle {
@@ -99,12 +96,13 @@ impl Circle {
 
 impl Drawable for Circle {
     fn draw(&self, image: &mut Image) {
-        let color = random_color();   // Get a random color for the circle.
-        let mut x = self.r;           // Start with x equal to the radius.
-        let mut y = 0;                // Start y at 0.
-        let mut err = 0;              // Initialize error term.
+        let color = random_color(); // Get a random color for the circle.
+        let mut x = self.r; // Start with x equal to the radius.
+        let mut y = 0; // Start y at 0.
+        let mut err = 0; // Initialize error term.
 
-        while x >= y {    // Loop while x >= y to draw all eight octants of the circle.
+        while x >= y {
+            // Loop while x >= y to draw all eight octants of the circle.
             image.display(self.c.x + x, self.c.y + y, &color);
             image.display(self.c.x + y, self.c.y + x, &color);
             image.display(self.c.x - y, self.c.y + x, &color);
@@ -124,9 +122,8 @@ impl Drawable for Circle {
                 err -= 2 * x + 1;
             }
         }
-    }  
+    }
 }
-
 
 //--------------------------------------------------------------------------------
 // Line
@@ -160,12 +157,12 @@ impl Drawable for Line {
 
         let dx = (x2 - x1).abs();
         let dy = (y2 - y1).abs();
-        let sx = if x1 < x2 { 1 } else { -1 };  // Step in x direction.
-        let sy = if y1 < y2 { 1 } else { -1 };  // Step in y direction.
+        let sx = if x1 < x2 { 1 } else { -1 }; // Step in x direction.
+        let sy = if y1 < y2 { 1 } else { -1 }; // Step in y direction.
         let mut err = if dx > dy { dx } else { -dy } / 2;
 
         while x1 != x2 || y1 != y2 {
-            image.display(x1, y1, &color);  // Plot the pixel.
+            image.display(x1, y1, &color); // Plot the pixel.
             let e2 = err;
             if e2 > -dx {
                 err -= dy;
@@ -178,8 +175,6 @@ impl Drawable for Line {
         }
     }
 }
-
-
 
 //--------------------------------------------------------------------------------
 // Triangle
@@ -204,12 +199,11 @@ impl Triangle {
 impl Drawable for Triangle {
     fn draw(&self, image: &mut Image) {
         // Draw the three sides of the triangle.
-        Line::new(self.p1.clone(), self.p2.clone()).draw(image);  // Side 1.
-        Line::new(self.p2.clone(), self.p3.clone()).draw(image);  // Side 2.
-        Line::new(self.p3.clone(), self.p1.clone()).draw(image);  // Side 3.
+        Line::new(self.p1.clone(), self.p2.clone()).draw(image); // Side 1.
+        Line::new(self.p2.clone(), self.p3.clone()).draw(image); // Side 2.
+        Line::new(self.p3.clone(), self.p1.clone()).draw(image); // Side 3.
     }
 }
-
 
 //--------------------------------------------------------------------------------
 // Image

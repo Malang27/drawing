@@ -2,8 +2,8 @@ extern crate raster;
 mod geometrical_shapes;
 
 use geometrical_shapes as gs;
-use gs::{Displayable, Drawable};
-use raster::{Color, Image};
+use gs::Drawable;
+use raster::Image;
 
 fn main() {
     let mut image = Image::blank(1000, 1000);
@@ -21,6 +21,8 @@ fn main() {
         &gs::Point::new(700, 800),
     );
     triangle.draw(&mut image);
+
+    gs::Circle::new(&gs::Point::new(200, 250), 100);
 
     for _ in 1..50 {
         gs::Circle::random(image.width, image.height).draw(&mut image);
