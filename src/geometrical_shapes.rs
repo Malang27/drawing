@@ -22,14 +22,14 @@ pub struct Point {
 
 impl Point {
     pub fn new(pos_x: i32, pos_y: i32) -> Point {
-        Point { x: pos_x, y: pos_y } // Creates a Point with the provided x and y coordinates.
+        Point { x: pos_x, y: pos_y } 
     }
 
     pub fn random(width: i32, height: i32) -> Point {
         let mut rng = rand::thread_rng();
         Point {
-            x: rng.gen_range(0..width),  // Random x coordinate within image width.
-            y: rng.gen_range(0..height), // Random y coordinate within image height.
+            x: rng.gen_range(0..width),  
+            y: rng.gen_range(0..height),
         }
     }
 }
@@ -60,14 +60,26 @@ impl Rectangle {
 
 impl Drawable for Rectangle {
     fn draw(&self, image: &mut Image) {
-        let top_right = Point::new(self.bottom_right.x, self.top_left.y); // Top-right corner.
-        let bottom_left = Point::new(self.top_left.x, self.bottom_right.y); // Bottom-left corner.
-
-        // Draw four sides of the rectangle using Line structs.
-        Line::new(self.top_left.clone(), top_right.clone()).draw(image); // Top side.
-        Line::new(top_right, self.bottom_right.clone()).draw(image); // Right side.
-        Line::new(self.bottom_right.clone(), bottom_left.clone()).draw(image); // Bottom side.
-        Line::new(bottom_left, self.top_left.clone()).draw(image); // Left side.
+        Line::new(
+            self.top_left.clone(),
+            Point::new(self.bottom_right.x, self.top_left.y),
+        )
+        .draw(image);
+        Line::new(
+            Point::new(self.bottom_right.x, self.top_left.y),
+            self.bottom_right.clone(),
+        )
+        .draw(image);
+        Line::new(
+            self.bottom_right.clone(),
+            Point::new(self.top_left.x, self.bottom_right.y),
+        )
+        .draw(image);
+        Line::new(
+            Point::new(self.top_left.x, self.bottom_right.y),
+            self.top_left.clone(),
+        )
+        .draw(image);
     }
 }
 
@@ -96,13 +108,12 @@ impl Circle {
 
 impl Drawable for Circle {
     fn draw(&self, image: &mut Image) {
-        let color = random_color(); // Get a random color for the circle.
-        let mut x = self.r; // Start with x equal to the radius.
-        let mut y = 0; // Start y at 0.
-        let mut err = 0; // Initialize error term.
+        let color = random_color();
+        let mut x = self.r;
+        let mut y = 0;
+        let mut err = 0;
 
         while x >= y {
-            // Loop while x >= y to draw all eight octants of the circle.
             image.display(self.c.x + x, self.c.y + y, &color);
             image.display(self.c.x + y, self.c.y + x, &color);
             image.display(self.c.x - y, self.c.y + x, &color);
@@ -149,20 +160,27 @@ impl Line {
 
 impl Drawable for Line {
     fn draw(&self, image: &mut Image) {
-        let color = random_color();
         let mut x1 = self.p1.x;
         let mut y1 = self.p1.y;
         let x2 = self.p2.x;
         let y2 = self.p2.y;
-
         let dx = (x2 - x1).abs();
         let dy = (y2 - y1).abs();
-        let sx = if x1 < x2 { 1 } else { -1 }; // Step in x direction.
-        let sy = if y1 < y2 { 1 } else { -1 }; // Step in y direction.
+        let sx = if x1 < x2 { 1 } else { -1 };
+        let sy = if y1 < y2 { 1 } else { -1 };
         let mut err = if dx > dy { dx } else { -dy } / 2;
 
         while x1 != x2 || y1 != y2 {
-            image.display(x1, y1, &color); // Plot the pixel.
+            image.display(
+                x1,
+                y1,
+                &Color {
+                    r: (255),
+                    g: (255),
+                    b: (255),
+                    a: (255),
+                },
+            );
             let e2 = err;
             if e2 > -dx {
                 err -= dy;
@@ -198,7 +216,6 @@ impl Triangle {
 
 impl Drawable for Triangle {
     fn draw(&self, image: &mut Image) {
-        // Draw the three sides of the triangle.
         Line::new(self.p1.clone(), self.p2.clone()).draw(image); // Side 1.
         Line::new(self.p2.clone(), self.p3.clone()).draw(image); // Side 2.
         Line::new(self.p3.clone(), self.p1.clone()).draw(image); // Side 3.
@@ -208,10 +225,10 @@ impl Drawable for Triangle {
 //--------------------------------------------------------------------------------
 // Image
 //--------------------------------------------------------------------------------
+
 impl Displayable for Image {
     fn display(&mut self, x: i32, y: i32, color: &Color) {
         if x >= 0 && x < self.width && y >= 0 && y < self.height {
-            // Utilisation de la référence sans clonage ici
             self.set_pixel(x, y, color.clone()).unwrap();
         }
     }
