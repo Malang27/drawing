@@ -1,8 +1,6 @@
-extern crate raster;
 mod geometrical_shapes;
-
 use geometrical_shapes as gs;
-use gs::Drawable;
+use gs::*;
 use raster::Image;
 
 fn main() {
