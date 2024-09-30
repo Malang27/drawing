@@ -22,13 +22,13 @@ pub struct Point {
 
 impl Point {
     pub fn new(pos_x: i32, pos_y: i32) -> Point {
-        Point { x: pos_x, y: pos_y } 
+        Point { x: pos_x, y: pos_y }
     }
 
     pub fn random(width: i32, height: i32) -> Point {
         let mut rng = rand::thread_rng();
         Point {
-            x: rng.gen_range(0..width),  
+            x: rng.gen_range(0..width),
             y: rng.gen_range(0..height),
         }
     }
@@ -171,16 +171,8 @@ impl Drawable for Line {
         let mut err = if dx > dy { dx } else { -dy } / 2;
 
         while x1 != x2 || y1 != y2 {
-            image.display(
-                x1,
-                y1,
-                &Color {
-                    r: (255),
-                    g: (255),
-                    b: (255),
-                    a: (255),
-                },
-            );
+            let color = random_color();
+            image.display(x1, y1, &color);
             let e2 = err;
             if e2 > -dx {
                 err -= dy;
